@@ -8,9 +8,9 @@ dotenv.config({
     path: './.env'
 })
 
-
-
-
+app.get("/", (req, res) => {
+  res.send("FuzzTube Backend is Live 🚀");
+});
 
 
 
