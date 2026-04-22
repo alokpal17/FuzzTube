@@ -10,26 +10,13 @@ const envOrigins = process.env.CORS_ORIGIN
     : []
 
 app.use(cors({
-    origin(origin, callback) {
-        if (!origin) {
-            return callback(null, true)
-        }
-        if (envOrigins.length > 0 && envOrigins.includes(origin)) {
-            return callback(null, true)
-        }
-        if (envOrigins.length === 0 && defaultOrigins.includes(origin)) {
-            return callback(null, true)
-        }
-        if (envOrigins.length === 0 && process.env.NODE_ENV !== "production") {
-            const devOk = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/i.test(origin)
-            if (devOk) {
-                return callback(null, true)
-            }
-        }
-        callback(null, false)
-    },
-    credentials: true
-}))
+  origin: [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "https://fuzztube.netlify.app"
+  ],
+  credentials: true
+}));
 
 app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
