@@ -24,9 +24,10 @@ function resolveApiBaseURL(): string {
   const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");
 
-  if (import.meta.env.DEV) return "/api/v1";
+  if (import.meta.env.DEV) return "/api";
 
-  return "https://fuzztube.onrender.com/api/v1";
+  return "https://fuzztube.onrender.com";
+}
 }
 
 const api = axios.create({
