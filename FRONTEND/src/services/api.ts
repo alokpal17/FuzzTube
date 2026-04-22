@@ -26,7 +26,7 @@ function resolveApiBaseURL(): string {
 
   if (import.meta.env.DEV) return "/api";
 
-  return "https://fuzztube.onrender.com";
+  return "https://fuzztube.onrender.com/api";
 }
 }
 
