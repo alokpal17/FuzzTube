@@ -23,9 +23,10 @@ export interface ApiUser {
 function resolveApiBaseURL(): string {
   const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");
-  // Development: hit Vite proxy (see vite.config.ts) so the browser stays same-origin
+
   if (import.meta.env.DEV) return "/api/v1";
-  return "http://127.0.0.1:8000/api/v1";
+
+  return "https://fuzztube.onrender.com/api/v1";
 }
 
 const api = axios.create({
