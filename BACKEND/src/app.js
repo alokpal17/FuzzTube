@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"
 
 const app = express()
 
-const defaultOrigins = ["http://localhost:8080", "http://127.0.0.1:8080", "http://[::1]:8080"]
+const defaultOrigins = ["http://localhost:8080", "http://127.0.0.1:8080", "http://[::1]:8080","https://fuzztube.netlify.app"]
 const envOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean)
     : []
