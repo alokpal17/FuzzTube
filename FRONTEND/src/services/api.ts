@@ -26,9 +26,9 @@ function resolveApiBaseURL(): string {
 
   if (import.meta.env.DEV) return "/api";
 
-  return "https://fuzztube.onrender.com/api";
+  return "https://fuzztube.onrender.com";
 }
-}
+
 
 const api = axios.create({
   baseURL: resolveApiBaseURL(),
