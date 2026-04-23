@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
-    // Dev: same-origin /api → backend (avoids CORS + fixes 127.0.0.1 vs localhost)
+    // Dev: same-origin /api/v1 → backend (avoids CORS + fixes 127.0.0.1 vs localhost)
     proxy: {
-      "/api": {
+      "/api/v1": {
         target: "http://127.0.0.1:8000",
         changeOrigin: true,
       },

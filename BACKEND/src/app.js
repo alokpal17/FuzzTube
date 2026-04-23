@@ -4,19 +4,30 @@ import cookieParser from "cookie-parser"
 
 const app = express()
 
-const defaultOrigins = ["http://localhost:8080", "http://127.0.0.1:8080", "http://[::1]:8080","https://fuzztube.netlify.app"]
-const envOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean)
-    : []
+const defaultOrigins = [
+  "http://localhost:8080",
+  "http://127.0.0.1:8080",
+  "http://[::1]:8080",
+  "https://fuzztube.netlify.app",
+]
 
-app.use(cors({
-  origin: [
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-    "https://fuzztube.netlify.app"
-  ],
-  credentials: true
-}));
+const envOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim()).filter(Boolean)
+  : []
+
+const allowedOrigins = new Set([...defaultOrigins, ...envOrigins])
+
+app.use(
+  cors({
+    origin(origin, cb) {
+      // allow non-browser requests (curl/postman) where Origin may be undefined
+      if (!origin) return cb(null, true)
+      if (allowedOrigins.has(origin)) return cb(null, true)
+      return cb(new Error(`CORS blocked for origin: ${origin}`))
+    },
+    credentials: true,
+  })
+)
 
 app.use(express.json({limit: "16kb"}))
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
