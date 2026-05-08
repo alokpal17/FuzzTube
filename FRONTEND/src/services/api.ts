@@ -528,37 +528,75 @@ export const fetchChannelStats = async (): Promise<ChannelStats> => {
 };
 
 // ——— Notifications ———
+// ──────────────────────────────────────────────────────────────
+// REPLACE the entire "——— Notifications ———" section in api.ts
+// with this block. Everything else in api.ts stays the same.
+// ──────────────────────────────────────────────────────────────
+
+// ——— Notifications ———
 
 export interface Notification {
   id: string;
-  type: 'comment' | 'like' | 'follow' | 'share';
+  type: "subscribe" | "like_video" | "like_tweet" | "comment_video" | "retweet";
   message: string;
-  user: {
-    name: string;
+  sender: {
+    username: string;
+    fullName: string;
     avatar?: string;
   };
-  videoTitle?: string;
-  videoId?: string;
+  entityId?: string;
+  entityModel?: string;
   timestamp: string;
   read: boolean;
 }
 
-export const fetchNotifications = async (): Promise<Notification[]> => {
-  const res = await api.get<ApiEnvelope<Notification[]>>("/notifications");
-  return unwrap(res);
+export interface NotificationsResponse {
+  notifications: Notification[];
+  unreadCount: number;
+}
+
+interface RawNotification {
+  _id: string;
+  type: Notification["type"];
+  message: string;
+  sender: {
+    username: string;
+    fullName: string;
+    avatar?: string;
+  };
+  entityId?: string;
+  entityModel?: string;
+  createdAt: string;
+  isRead: boolean;
+}
+
+export const fetchNotifications = async (): Promise<NotificationsResponse> => {
+  const res = await api.get<ApiEnvelope<{ notifications: RawNotification[]; unreadCount: number }>>("/notifications");
+  const raw = unwrap(res);
+
+  const notifications: Notification[] = (raw.notifications || []).map((n) => ({
+    id: String(n._id),
+    type: n.type,
+    message: n.message,
+    sender: n.sender,
+    entityId: n.entityId ? String(n.entityId) : undefined,
+    entityModel: n.entityModel,
+    timestamp: n.createdAt,
+    read: n.isRead,
+  }));
+
+  return { notifications, unreadCount: raw.unreadCount };
 };
 
 export const markNotificationAsRead = async (notificationId: string): Promise<void> => {
   await api.patch<ApiEnvelope<unknown>>(`/notifications/${notificationId}/read`);
 };
 
-export const markAllNotificationsAsRead = async (): Promise<void> => {
-  await api.patch<ApiEnvelope<unknown>>("/notifications/read-all");
+export const deleteNotification = async (notificationId: string): Promise<void> => {
+  await api.delete<ApiEnvelope<unknown>>(`/notifications/${notificationId}`);
 };
 
-export const createCommentNotification = async (videoId: string, comment: string): Promise<void> => {
-  const res = await api.post<ApiEnvelope<unknown>>(`/videos/${videoId}/comments`, { comment });
-  unwrap(res);
+export const clearAllNotifications = async (): Promise<void> => {
+  await api.delete<ApiEnvelope<unknown>>("/notifications");
 };
-
 export default api;
