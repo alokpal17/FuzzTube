@@ -146,6 +146,5 @@ export {
     getVideoComments,
     addComment,
     updateComment,
-    deleteComment,
-    createNotification
+    deleteComment
 }
