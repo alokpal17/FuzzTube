@@ -364,6 +364,60 @@ export const deleteTweetApi = async (tweetId: string): Promise<void> => {
   await api.delete<ApiEnvelope<unknown>>(`/tweets/${tweetId}`);
 };
 
+// ——— Tweet Comments ———
+
+export interface TweetComment {
+  id: string;
+  content: string;
+  createdAt: string;
+  owner: {
+    _id: string;
+    username: string;
+    fullName?: string;
+    avatar?: string;
+  };
+}
+
+interface TweetCommentDoc {
+  _id: string;
+  content: string;
+  createdAt: string;
+  owner: {
+    _id: string;
+    username: string;
+    fullName?: string;
+    avatar?: string;
+  };
+}
+
+export const fetchTweetComments = async (
+  tweetId: string,
+  params?: { page?: number; limit?: number }
+): Promise<TweetComment[]> => {
+  const res = await api.get<ApiEnvelope<TweetCommentDoc[]>>(`/tweets/${tweetId}/comments`, { params });
+  return unwrap(res).map((c) => ({
+    id: String(c._id),
+    content: c.content,
+    createdAt: c.createdAt,
+    owner: c.owner,
+  }));
+};
+
+export const addTweetComment = async (tweetId: string, content: string): Promise<TweetComment> => {
+  const res = await api.post<ApiEnvelope<TweetCommentDoc>>(`/tweets/${tweetId}/comments`, { content });
+  const c = unwrap(res);
+  return {
+    id: String(c._id),
+    content: c.content,
+    createdAt: c.createdAt,
+    owner: c.owner,
+  };
+};
+
+export const deleteTweetCommentApi = async (commentId: string): Promise<void> => {
+  await api.delete<ApiEnvelope<unknown>>(`/tweets/comments/${commentId}`);
+};
+
 // ——— Videos ———
 
 export const fetchVideos = async (params?: { query?: string; page?: number; limit?: number }): Promise<Video[]> => {
