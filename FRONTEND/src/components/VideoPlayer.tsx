@@ -21,7 +21,7 @@ import {
   toggleSubscription,
   getChannelProfile,
   getStoredUser,
-  createCommentNotification,
+  // createCommentNotification,
   type Video,
 } from "@/services/api";
 
@@ -167,46 +167,27 @@ const VideoPlayer = ({ video, onClose }: VideoPlayerProps) => {
   };
 
   const handleAddComment = async () => {
-    if (!comment.trim()) return;
-    
-    try {
-      // Create notification for video owner (if commenter is not the owner)
-      if (currentUser && activeVideo.channel !== currentUser.username) {
-        try {
-          await createCommentNotification(activeVideo.id || '', comment.trim());
-        } catch (notifError) {
-          console.log('Notification API not available:', notifError);
-          // Comment still works even if notification fails
-        }
-      }
-      
-      const newComment: CommentItem = {
-        id: Date.now().toString(),
-        user: currentUser?.fullname || currentUser?.username || "You",
-        avatar: currentUser?.avatar,
-        text: comment.trim(),
-        time: "Just now",
-        likes: 0,
-        liked: false,
-      };
-      setComments((prev) => [newComment, ...prev]);
-      setComment("");
-    } catch (error) {
-      console.error('Failed to post comment:', error);
-      // Still add the comment locally even if notification fails
-      const newComment: CommentItem = {
-        id: Date.now().toString(),
-        user: currentUser?.fullname || currentUser?.username || "You",
-        avatar: currentUser?.avatar,
-        text: comment.trim(),
-        time: "Just now",
-        likes: 0,
-        liked: false,
-      };
-      setComments((prev) => [newComment, ...prev]);
-      setComment("");
-    }
-  };
+  if (!comment.trim()) return;
+
+  try {
+    // TODO: call your actual API to save comment
+    // await addComment(activeVideo.id, comment.trim())
+
+    const newComment: CommentItem = {
+      id: Date.now().toString(),
+      user: currentUser?.fullname || currentUser?.username || "You",
+      avatar: currentUser?.avatar,
+      text: comment.trim(),
+      time: "Just now",
+      likes: 0,
+      liked: false,
+    };
+    setComments((prev) => [newComment, ...prev]);
+    setComment("");
+  } catch (error) {
+    console.error("Failed to post comment:", error);
+  }
+};
 
   const handleCommentLike = (id: string) => {
     setComments((prev) =>
