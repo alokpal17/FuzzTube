@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { Subscription} from "../models/subscription.models.js"
 import { User } from "../models/user.models.js"
 
+
 const toggleSubscription = asyncHandler(async (req, res) => {
     const { channelId} = req.params
 
@@ -38,6 +39,13 @@ if(channelId === req.user._id.toString()){
     return res.status(200).json(
         new ApiResponse(200, newSubscription, "Subscribed successfully")
     )
+})
+
+await createNotification({
+  recipientId: channel._id,
+  senderId: req.user._id,
+  type: "subscribe",
+  message: `${req.user.username} subscribed to your channel`,
 })
 
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {

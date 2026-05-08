@@ -13,6 +13,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 */
 
 
+
 const getVideoComments = asyncHandler(async (req, res) => {
     
     const {videoId} = req.params
@@ -65,6 +66,8 @@ const addComment = asyncHandler(async (req, res) => {
 
 })
 
+
+
 const updateComment = asyncHandler(async (req, res) => {
     /* 
     1.commentid chahiye
@@ -106,6 +109,14 @@ const updateComment = asyncHandler(async (req, res) => {
         new ApiResponse(200, updatedComment, "Comment updated successfully")
     )
 
+    await createNotification({
+  recipientId: video.owner,
+  senderId: req.user._id,
+  type: "comment_video",
+  entityId: video._id,
+  entityModel: "Video",
+  message: `${req.user.username} commented: "${comment.content.slice(0, 50)}"`,
+})
 
 })
 
@@ -135,5 +146,6 @@ export {
     getVideoComments,
     addComment,
     updateComment,
-    deleteComment
+    deleteComment,
+    createNotification
 }
