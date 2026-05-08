@@ -4,6 +4,7 @@ import {Video} from "../models/video.models.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
+import { createNotification } from "./notification.controllers.js"
 
 /*
 1.Get video comments
@@ -59,6 +60,15 @@ const addComment = asyncHandler(async (req, res) => {
         owner: req.user._id
     })
 
+    await createNotification({
+        recipientId: video.owner,
+        senderId: req.user._id,
+        type: "comment_video",
+        entityId: video._id,
+        entityModel: "Video",
+        message: `${req.user.username} commented: "${String(content).slice(0, 50)}"`,
+    })
+
     return res.status(200).json(
         new ApiResponse(200, comment, "Comment added successfully")
     )
@@ -108,15 +118,6 @@ const updateComment = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(200, updatedComment, "Comment updated successfully")
     )
-
-    await createNotification({
-  recipientId: video.owner,
-  senderId: req.user._id,
-  type: "comment_video",
-  entityId: video._id,
-  entityModel: "Video",
-  message: `${req.user.username} commented: "${comment.content.slice(0, 50)}"`,
-})
 
 })
 

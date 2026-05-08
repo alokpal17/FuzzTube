@@ -5,8 +5,8 @@ import {
   markAsRead,
   deleteNotification,
   deleteAllNotifications,
-} from "../controllers/notification.controller.js"
-import { verifyJWT } from "../middlewares/auth.middleware.js"
+} from "../controllers/notification.controllers.js"
+import { verifyJWT } from "../middlewares/auth.middlewares.js"
 
 const router = Router()
 
