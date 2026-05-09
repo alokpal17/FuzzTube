@@ -123,6 +123,14 @@ export interface Tweet {
   isLiked?: boolean;
 }
 
+/** Optional WebVTT captions when backend provides subtitle URLs */
+export interface VideoCaptionTrack {
+  src: string;
+  label: string;
+  srclang: string;
+  default?: boolean;
+}
+
 export interface Video {
   id: string;
   title: string;
@@ -133,6 +141,7 @@ export interface Video {
   date: string;
   videoUrl?: string;
   description?: string;
+  captionsTracks?: VideoCaptionTrack[];
 }
 
 interface TweetOwner {
@@ -165,6 +174,7 @@ interface VideoDoc {
   views?: number;
   createdAt?: string;
   owner?: VideoOwnerDoc | string;
+  captionsTracks?: VideoCaptionTrack[];
 }
 
 export function mapTweetDoc(t: TweetDoc): Tweet {
@@ -214,6 +224,7 @@ export function mapVideoDoc(v: VideoDoc, channelFallback = "Channel"): Video {
     date: formatDate(v.createdAt),
     videoUrl: v.videoFile || '',
     description: v.description || '',
+    captionsTracks: v.captionsTracks,
   };
 }
 
