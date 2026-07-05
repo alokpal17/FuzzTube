@@ -34,6 +34,9 @@ https://fuzztube.netlify.app
 - Cloudinary (video & image storage)
 - JWT (authentication)
 - Deployed on Render
+- 🐳 Docker
+docker pull alokpal17/fuzztube-backend
+docker pull alokpal17/fuzztube-frontend
 
 ## 📁 Project Structure
 
