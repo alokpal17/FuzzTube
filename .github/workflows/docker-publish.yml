@@ -24,11 +24,11 @@ jobs:
        with:
          context: ./BACKEND
          push: true
-         tags: alokpal17/fuzztube/backend:latest
+         tags: alokpal17/fuzztube-backend:latest
 
      - name: Build & Push Frontend
        uses: docker/build-push-action@v5
        with:
          context: ./FRONTEND
          push: true
-         tags: alokpal17/fuzztube/frontend:latest
+         tags: alokpal17/fuzztube-frontend:latest
