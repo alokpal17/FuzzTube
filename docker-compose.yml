@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./BACKEND
+    container_name: fuzztube-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./BACKEND/.env
+    networks:
+      - fuzztube-network
+
+  frontend:
+    build: ./FRONTEND
+    container_name: fuzztube-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - fuzztube-network
+
+networks:
+  fuzztube-network:
+    driver: bridge
